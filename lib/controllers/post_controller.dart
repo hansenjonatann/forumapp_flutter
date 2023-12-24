@@ -42,11 +42,9 @@ class PostController extends GetxController {
     }
   }
 
-  Future createPost(
-    {
-      required String content,
-    }
-  ) async {
+  Future createPost({
+    required String content,
+  }) async {
     try {
       var data = {
         'content': content,
@@ -60,8 +58,8 @@ class PostController extends GetxController {
         },
         body: data,
       );
-      
-      if(response.statusCode == 201){
+
+      if (response.statusCode == 201) {
         print(json.decode(response.body));
       } else {
         Get.snackbar(
@@ -72,7 +70,6 @@ class PostController extends GetxController {
           colorText: Colors.white,
         );
       }
-
     } catch (e) {
       print(e.toString());
     }
@@ -80,7 +77,6 @@ class PostController extends GetxController {
 
   Future getComments(id) async {
     try {
-      comments.value.clear();
       isLoading.value = true;
 
       var response = await http.get(
@@ -91,7 +87,7 @@ class PostController extends GetxController {
         },
       );
 
-      if(response.statusCode == 20) {
+      if (response.statusCode == 200) {
         isLoading.value = false;
         final content = json.decode(response.body)['comments'];
         for (var item in content) {
@@ -106,5 +102,41 @@ class PostController extends GetxController {
       print(e.toString());
     }
   }
-}
 
+  Future createComment(id, body) async {
+    try {
+      isLoading.value = true;
+      var data = {
+        "body": body,
+      };
+
+      var request = await http.post(Uri.parse('${url}feed/comment/$id'),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ${box.read('token')}',
+          },
+          body: data);
+
+      if (request.statusCode == 201) {
+        isLoading.value = false;
+        print(json.decode(request.body));
+      } else {
+        isLoading.value = false;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future deletePost(id) async {
+    try {
+      var response = await http.delete(Uri.parse('${url}feed/$id'));
+
+      if (response.statusCode == 200) {
+        print('Hapus data berhasil');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forum_app/controllers/post_controller.dart';
 import 'package:forum_app/models/post_models.dart';
 import 'package:forum_app/views/post_details.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class PostData extends StatelessWidget {
   PostData({required this.post});
+  final PostController _postController = Get.put(PostController());
 
   final PostModel post;
   @override
@@ -41,11 +43,9 @@ class PostData extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  Get.to(
-                    () => PostDetails(
-                      post: post,
-                    )
-                  );
+                  Get.to(() => PostDetails(
+                        post: post,
+                      ));
                 },
                 icon: Icon(Icons.message),
               ),

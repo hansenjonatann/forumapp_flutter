@@ -40,19 +40,17 @@ class _HomePageState extends State<HomePage> {
                     elevation: 0,
                     padding:
                         EdgeInsets.symmetric(horizontal: 50, vertical: 10)),
-                onPressed: () async{
+                onPressed: () async {
                   await _postController.createPost(
-                    content: _textController.text.trim()
-                  );
+                      content: _textController.text.trim());
                   _textController.clear();
                   _postController.getAllPosts();
                 },
                 child: Obx(() {
-                    return _postController.isLoading.value
+                  return _postController.isLoading.value
                       ? const CircularProgressIndicator()
                       : Text('Post');
-                  }
-                ),
+                }),
               ),
               SizedBox(height: 30),
               Text('Posts'),
