@@ -1,4 +1,6 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:forum_app/controllers/post_controller.dart';
 import 'package:forum_app/views/widgets/post_data.dart';
 import 'package:forum_app/views/widgets/post_field.dart';
 
@@ -10,7 +12,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final TextEditingController _postController = TextEditingController();
+  final PostController _postController = Get.put(PostController());
+  final TextEditingController _textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +32,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               PostField(
                 hintText: 'What do you want to ask?',
-                controller: _postController,
+                controller: _textController,
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -42,7 +46,22 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: 30),
               Text('Posts'),
               SizedBox(height: 20),
-              PostData(),
+              Obx(() {
+                return _postController.isLoading.value
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        itemCount: _postController.posts.value.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return PostData(
+                            post: _postController.posts.value[index],
+                          );
+                        },
+                      );
+              }),
               SizedBox(
                 height: 20,
               ),
